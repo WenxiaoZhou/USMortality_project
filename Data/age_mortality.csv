@@ -1,0 +1,141 @@
+﻿Year,Race,Sex,Average Life Expectancy (Years),Mortality
+1999,All Races,Both Sexes,76.70,875.60
+2000,All Races,Both Sexes,76.80,869.00
+2001,All Races,Both Sexes,77.00,858.80
+2002,All Races,Both Sexes,77.00,855.90
+2003,All Races,Both Sexes,77.60,843.50
+2004,All Races,Both Sexes,77.50,813.70
+2005,All Races,Both Sexes,77.60,815.00
+2006,All Races,Both Sexes,77.80,791.80
+2007,All Races,Both Sexes,78.10,775.30
+2008,All Races,Both Sexes,78.20,774.90
+2009,All Races,Both Sexes,78.50,749.60
+2010,All Races,Both Sexes,78.70,747.00
+2011,All Races,Both Sexes,78.70,741.30
+2012,All Races,Both Sexes,78.80,732.80
+2013,All Races,Both Sexes,78.80,731.90
+2014,All Races,Both Sexes,78.90,724.60
+2015,All Races,Both Sexes,78.70,733.10
+2016,All Races,Both Sexes,78.70,728.80
+2017,All Races,Both Sexes,78.60,731.90
+2018,All Races,Both Sexes,78.70,723.60
+1999,All Races,Female,79.40,734.00
+2000,All Races,Female,79.70,731.40
+2001,All Races,Female,79.50,725.60
+2002,All Races,Female,79.60,723.60
+2003,All Races,Female,79.70,715.20
+2004,All Races,Female,80.10,690.50
+2005,All Races,Female,80.10,692.30
+2006,All Races,Female,80.30,672.20
+2007,All Races,Female,80.60,658.10
+2008,All Races,Female,80.60,660.00
+2009,All Races,Female,80.90,636.80
+2010,All Races,Female,81.00,634.90
+2011,All Races,Female,81.10,632.40
+2012,All Races,Female,81.20,624.70
+2013,All Races,Female,81.20,623.50
+2014,All Races,Female,81.30,616.70
+2015,All Races,Female,81.10,624.20
+2016,All Races,Female,81.10,617.50
+2017,All Races,Female,81.10,619.70
+2018,All Races,Female,81.20,611.30
+1999,All Races,Male,73.90,1067.00
+2000,All Races,Male,74.30,1053.80
+2001,All Races,Male,74.30,1035.30
+2002,All Races,Male,74.40,1030.60
+2003,All Races,Male,74.50,1010.30
+2004,All Races,Male,75.00,973.30
+2005,All Races,Male,75.00,971.90
+2006,All Races,Male,75.20,943.40
+2007,All Races,Male,75.50,922.90
+2008,All Races,Male,75.60,918.80
+2009,All Races,Male,76.00,890.90
+2010,All Races,Male,76.20,887.10
+2011,All Races,Male,76.30,875.30
+2012,All Races,Male,76.40,865.10
+2013,All Races,Male,76.40,863.60
+2014,All Races,Male,76.50,855.10
+2015,All Races,Male,76.30,863.20
+2016,All Races,Male,76.20,861.00
+2017,All Races,Male,76.10,864.50
+2018,All Races,Male,76.20,855.50
+1999,White,Male,74.60,1040.10
+2000,White,Male,74.70,1029.40
+2001,White,Male,74.90,1012.10
+2002,White,Male,74.90,1009.00
+2003,White,Male,75.10,988.80
+2004,White,Male,75.50,953.20
+2005,White,Male,75.50,952.90
+2006,White,Male,75.80,925.80
+2007,White,Male,76.00,907.10
+2008,White,Male,76.10,907.10
+2009,White,Male,76.40,880.50
+2010,White,Male,76.50,878.50
+2011,White,Male,76.60,870.20
+2012,White,Male,76.70,860.00
+2013,White,Male,76.70,859.20
+2014,White,Male,76.70,853.40
+2015,White,Male,76.60,861.90
+2016,White,Male,76.40,858.90
+2017,White,Male,76.40,863.40
+2018,White,Male,,853.10
+1999,White,Female,79.90,716.60
+2000,White,Female,79.90,715.30
+2001,White,Female,80.00,710.40
+2002,White,Female,80.10,709.30
+2003,White,Female,80.20,701.60
+2004,White,Female,80.50,677.70
+2005,White,Female,80.50,680.90
+2006,White,Female,80.70,662.30
+2007,White,Female,80.90,649.40
+2008,White,Female,80.90,653.70
+2009,White,Female,81.20,631.30
+2010,White,Female,81.30,630.80
+2011,White,Female,81.30,630.30
+2012,White,Female,81.40,623.80
+2013,White,Female,81.40,623.60
+2014,White,Female,81.40,617.60
+2015,White,Female,81.30,627.00
+2016,White,Female,81.30,619.40
+2017,White,Female,81.20,623.50
+2018,White,Female,,614.60
+1999,Black,Male,67.80,1432.60
+2000,Black,Male,68.20,1403.50
+2001,Black,Male,68.50,1380.50
+2002,Black,Male,68.70,1364.80
+2003,Black,Male,68.90,1343.50
+2004,Black,Male,69.40,1296.90
+2005,Black,Male,69.50,1281.30
+2006,Black,Male,69.90,1239.50
+2007,Black,Male,70.30,1204.80
+2008,Black,Male,70.90,1168.00
+2009,Black,Male,71.40,1123.10
+2010,Black,Male,71.80,1104.00
+2011,Black,Male,72.20,1067.10
+2012,Black,Male,72.30,1058.60
+2013,Black,Male,72.30,1052.80
+2014,Black,Male,72.50,1034.00
+2015,Black,Male,72.20,1040.30
+2016,Black,Male,72.00,1049.50
+2017,Black,Male,71.90,1049.50
+2018,Black,Male,,1051.50
+1999,Black,Female,74.70,933.60
+2000,Black,Female,75.10,927.60
+2001,Black,Female,75.30,917.90
+2002,Black,Female,75.40,913.50
+2003,Black,Female,75.70,898.30
+2004,Black,Female,76.10,869.80
+2005,Black,Female,76.20,862.70
+2006,Black,Female,76.70,828.40
+2007,Black,Female,77.00,808.10
+2008,Black,Female,77.30,792.00
+2009,Black,Female,77.70,763.30
+2010,Black,Female,78.00,752.50
+2011,Black,Female,78.20,739.80
+2012,Black,Female,78.40,723.90
+2013,Black,Female,78.40,720.60
+2014,Black,Female,78.50,713.30
+2015,Black,Female,78.50,710.80
+2016,Black,Female,78.30,712.90
+2017,Black,Female,78.50,706.10
+2018,Black,Female,,702.60
