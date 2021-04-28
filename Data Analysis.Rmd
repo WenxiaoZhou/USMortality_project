@@ -1,0 +1,376 @@
+---
+title: "USMortality Project Data Analysis"
+author: "Wenxiao Zhou"
+date: "4/19/2021"
+output: word_document
+---
+
+Load the Data From 2015-2019
+```{r}
+setwd("/Users/zhouwenxiao/Desktop/USMortality")
+load("USall.rData")
+load("US19.rData")
+```
+
+Overall Analysis
+
+(1)Age-adjusted Mortality Rate for Year 2015-2019 among overall group and category by sex
+<point out why choosing age-adjusted rate: weighted on age group make more sense to balance difference mortality counts within groups
+https://www.health.ny.gov/diseases/chronic/ageadj.htm>
+
+<Age-adjusted data source: (add reference) https://data.cdc.gov/NCHS/NCHS-Death-rates-and-life-expectancy-at-birth/w9j2-ggv5/data>
+
+To see the time trend more clearly, we include the data from 1999-2018 under race categories, sex categories for age-adjusted mortality rate.
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+overall<-read.csv("age_mortality.csv")
+overall$Mortality<-as.numeric(overall$Mortality)
+all_race<-overall %>% subset(Race=="All Races") 
+colnames(all_race)<-c("Year","Race","Sex","Life","Mortality_Rate")
+white<-overall %>% subset(Race=="White")
+colnames(white)<-c("Year","Race","Sex","Life","Mortality_Rate")
+black<-overall %>% subset(Race=="Black")
+colnames(black)<-c("Year","Race","Sex","Life","Mortality_Rate")
+```
+
+```{r}
+#sex comparison overall race level
+p1<-ggplot(all_race,aes(Year,Mortality_Rate,color=Sex)) +
+  geom_line() +
+  geom_point(size=3,shape=21) +
+  xlab('Year')+ylab('Mortality Age-adjusted Rate (deaths per 100,000)') +
+  labs(list(color="Sex")) +
+  theme_minimal() +
+  ggtitle('Age-adjusted Mortality Rate(Sex Comparison) in 1999-2018')
+p1
+```
+```{r}
+#race & sex comparison overall years
+race<-rbind(white,black)
+race$category<-ifelse(race$Race=="White" & race$Sex=="Male",'W-M',
+                  ifelse(race$Race=="White" & race$Sex=="Female",'W-F',
+                  ifelse(race$Race=="Black" & race$Sex=="Male",'B-M','B-F')))
+race$category<-as.factor(race$category)
+p2<-ggplot(race,aes(Year,Mortality_Rate,color=category)) +
+   geom_line() +
+  geom_point(size=3,shape=21) +
+  xlab('Year') + ylab('Mortality Age-adjusted Rate (deaths per 100,000)') +
+  labs(list(color="Categories")) +
+  theme_minimal()+
+  ggtitle('Age-adjusted Mortality Rate(Sex,Race Comparison) in 1999-2018')
+p2
+```
+
+
+
+(2) Frequency Tables among marital status, resident status, education factors
+There is no significant difference among years under the same level of the factor. But for same year, the level differences are significant. <description by texts,summary>
+```{r}
+#Basic frequency tables of marital, resident, education factors
+USall$Year<-as.factor(USall$Year)
+t1<-prop.table(table(USall$Martial,USall$Year),2)
+t2<-prop.table(table(USall$Resident,USall$Year),2)
+t3<-prop.table(table(USall$Education,USall$Year),2)
+```
+
+Here, we find the distribution of mortality counts within education levels are worth further dicussed. So, we focus on education factors, categories as four new categories: high_school and below, bachelor or college, master or PHD, unknown. And draw the Stacked Bar plot to see the trend clearly.
+<http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html>
+
+Enrollment Data: https://data.census.gov/cedsci/table?q=school&tid=ACSST1Y2019.S1401
+
+<注意说明误差问题，人口普查的各个学龄段数据只包含美国公民，但死亡案例是否包含外来人口，有待核查，计算的比例>
+
+```{r}
+library(viridis)
+library(hrbrthemes)
+overall_edu<-USall
+teen<-which(overall_edu$Education %in% c("0","11"))
+high<-which(overall_edu$Education %in% c("21","31"))
+college<-which(overall_edu$Education %in% c("41","51","61"))
+grad<-which(overall_edu$Education %in% c("71","81"))
+unknown<-which(overall_edu$Education=="91")
+overall_edu$Education<-ifelse(overall_edu$ID %in% teen,"teen",
+          ifelse(overall_edu$ID %in% high, "high",
+          ifelse(overall_edu$ID %in% college,"college",
+          ifelse(overall_edu$ID %in% grad, "grad","unknown"))))
+overall_edu1<-overall_edu[which(overall_edu$Education!="unknown"),]
+edu<-data.frame(table(overall_edu1$Education,overall_edu1$Year))
+edu$enroll<-c(41874863,17086446,18620217,4036762,
+              41857908,17108087,18436671,4169611,
+              41828973,17150113,18105312,4188939,
+              41747569,17100878,17792902,4275426,
+              41703677,16932635,17507427,4321881)
+edu$pro<-edu$Freq/edu$enroll
+edu$pro<-round(edu$pro,digits=4)
+colnames(edu)<-c("Education","Year","Frequency","Enroll","Prop")
+ggplot(edu,aes(fill=Education,y=Prop,x=Year)) +
+  geom_bar(position="stack",stat="identity") +
+  scale_fill_viridis(discrete=T) +
+  ggtitle("Education Level Detection") +
+  theme_ipsum() +
+  xlab("")
+```
+
+(3)Time Tendency of Mortality Causes
+```{r}
+#Adults Suicide
+timea<-USall
+timea$Race<-ifelse(timea$Race=="1","White",
+                    ifelse(timea$Race=="2","Others","Black")) 
+timea$Age<-as.integer(timea$Age)
+timea<-subset(timea,Age>=30 & Age<=37,
+              select=c(Sex,Age,Cause,Race,Month,Year))
+timea2<-data.frame(table(timea$Cause,timea$Month,timea$Year))
+colnames(timea2)<-c("Cause","Month","Year","Freq")
+timea2<-timea2[order(timea2$Year,timea2$Freq,decreasing=TRUE),]
+timea1<-timea %>% filter(Cause=="40")
+ti1<-data.frame(table(timea1$Month,timea1$Year))
+colnames(ti1)<-c("Month","Year","Freq")
+bartlett.test(Freq~Month,data=ti1)
+comp1<-aov(Freq~Month, data = ti1)
+summary(comp1)
+#multiple comparison
+library(asbio)
+pairw.anova(y=ti1$Freq,x=ti1$Month,method="lsd",MSE=8742,df.err=48)
+```
+
+```{r}
+#Adults Heart Disease
+timea3<-timea %>% filter(Cause=="21")
+ti3<-data.frame(table(timea3$Month,timea3$Year))
+colnames(ti3)<-c("Month","Year","Freq")
+bartlett.test(Freq~Month,data=ti3)
+comp3<-aov(Freq~Month, data = ti3)
+summary(comp3)
+#multiple comparison
+library(asbio)
+pairw.anova(y=ti3$Freq,x=ti3$Month,method="lsd",MSE=29888,df.err=48)
+```
+
+(4) Further discussion and conclusion in overall analysis see on the data report.
+
+
+
+
+Year 2019 Analysis<空间维度的分析，涉及病因>
+
+(1-1) Top mortality causes of adults:
+use '39 Causes of Death
+First of all, define adults as age between 20-59 years, includes the boundaries.
+
+```{r}
+US19$Age<-as.integer(US19$Age)
+US19$Race<-ifelse(US19$Race=="1","White",
+                    ifelse(US19$Race=="2","Others","Black"))
+adult<-subset(US19,Age>=30 & Age<=37,
+              select=c(Sex,Age,Cause,Race,Month))
+
+adult1<-data.frame(table(adult$Cause,adult$Sex))
+colnames(adult1)<-c("Cause","Sex","Freq")
+adult1<-adult1[order(adult1$Sex,adult1$Freq,
+                       decreasing=TRUE),]
+#adult top 5 causes: Male
+#39(All other and unspecified accidents and adverse effects)
+#37(All other diseases)
+#21(Ischemic heart diseases)
+#40(Intentional self-harm (suicide))
+#15(Other malignant neoplasms)
+
+#Female
+#37(All other diseases)
+#39(All other and unspecified accidents and adverse effects)
+#15(Other malignant neoplasms)
+#21(Ischemic heart diseases)
+#09(Malignant neoplasm of breast)
+
+#For adults, what if we do not consider the effects of Sex
+#overall top 5 causes
+adult2<-data.frame(table(adult$Cause))
+adult2<-adult2[order(adult2$Freq,decreasing=TRUE),]
+#39(All other and unspecified accidents and adverse effects)
+#37(All other diseases)
+#21(Ischemic heart diseases)
+#40(Intentional self-harm (suicide))
+#15(Other malignant neoplasms)
+```
+
+
+
+(1-2) Top mortality causes of olders:
+use '39 Causes of Death
+First of all, define adults as age between 60+ years, includes the boundaries.
+
+```{r}
+old<-subset(US19,Age>=38,
+              select=c(Sex,Age,Cause,Race,Month))
+old1<-data.frame(table(old$Cause,old$Sex))
+colnames(old1)<-c("Cause","Sex","Freq")
+old1<-old1[order(old1$Sex,old1$Freq,
+                       decreasing=TRUE),]
+#adult top 5 causes: Male
+#37(All other diseases)
+#21(Ischemic heart diseases)
+#22(Other diseases of heart)
+#15(Other malignant neoplasms)
+#28(Chronic lower respiratory diseases)
+
+#Female
+#37(All other diseases)
+#21(Ischemic heart diseases)
+#22(Other diseases of heart)
+#17(Alzheimer’s disease)
+#24(Cerebrovascular diseases)
+
+#For elderly, what if we do not consider the effects of Sex
+#overall top 5 causes
+old2<-data.frame(table(old$Cause))
+old2<-old2[order(old2$Freq,decreasing=TRUE),]
+#37(All other diseases)
+#21(Ischemic heart diseases)
+#22(Other diseases of heart)
+#28(Chronic lower respiratory diseases)
+#15(Other malignant neoplasms)
+```
+
+
+
+(2)State Level Mortality Analysis
+
+data source: https://www.cdc.gov/nchs/nvss/vsrr/provisional-tables.htm
+
+US 2019 population:<mortality rate calculation>
+https://www.census.gov/search-results.html?searchType=web&cssp=SERP&q=population%20by%20states
+
+```{r}
+library(readxl)
+library(plotly)
+library(Hmisc)
+state2019<-read_excel("state2019.xlsx")
+state<-select(state2019,State,Total,Population)
+state$State<-capitalize(tolower(state$State))
+state$Rate<-round(state$Total/state$Population,digits=4)
+state$hover <- with(state, 
+               paste(State, '<br>', "Mortality Rate",Rate,
+               '<br>',"Deaths",Total))
+state$code<-c("AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY")
+# give state boundaries a white border
+l <- list(color = toRGB("white"), width = 2)
+# specify some map projection/options
+g <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+fig <- plot_geo(state, locationmode ='USA-states')
+fig <- fig %>% add_trace(
+    z = ~Rate, text = ~hover, locations = ~code,
+    color = ~Rate, colors = 'Purples'
+  )
+fig <- fig %>% colorbar(title = "Mortality Rates")
+fig <- fig %>% layout(
+    title = '2019 US Motality Rate Levels by States',
+    geo = g
+  )
+fig
+```
+save as a web page for interactively observe on the plot
+
+
+
+(3)Recall the overall analysis on education levels and mortality rates, we discuss that teen and high are two groups with highest mortality rates:
+```{r}
+edu2019<-overall_edu1 %>% filter(Year=="2019")
+edu2019$Race<-ifelse(edu2019$Race=="1","White",
+                    ifelse(edu2019$Race=="2","Others","Black"))
+teen2019<-edu2019 %>% filter(Education=="teen")
+high2019<-edu2019 %>% filter(Education=="high")
+table(teen2019$Manner)
+table(high2019$Manner)
+```
+From two tables studies, Accidents and Natural Deaths are two main categories of status, we only focus on these two categories.
+
+```{r}
+teendeath<-teen2019 %>% filter(Manner %in% c("7","1"))
+teena<-data.frame(table(teendeath$Cause,teendeath$Race))
+colnames(teena)<-c("Cause","Race","Freq")
+teena<-teena[order(teena$Race,teena$Freq,
+                       decreasing=TRUE),]
+#top 5 causes: 
+#White
+#37(All other diseases)
+#21(Ischemic heart diseases)
+#22(Other diseases of heart)
+#28(Chronic lower respiratory diseases)
+#24(Cerebrovascular diseases)
+
+#Others
+#37,21,24,22,15(Other malignant neoplasms)
+
+#Black
+#37,21,33(Certain conditions originating in the perinatal period),22,24
+
+highdeath<-high2019 %>% filter(Manner %in% c("7","1"))
+higha<-data.frame(table(highdeath$Cause,highdeath$Race))
+colnames(higha)<-c("Cause","Race","Freq")
+higha<-higha[order(higha$Race,higha$Freq,
+                       decreasing=TRUE),]
+#top 5 causes: 
+#White
+#37,21,22,28,39(All other and unspecified accidents and adverse effects)
+
+#Others
+#37,21,39,22,15
+
+#Black
+#37,21,22,24,39
+                
+```
+
+From overall years comparison as well as 2019 analysis, Heart Disease always be the top 3 mortality causes among different education levels, different race and age groups. This disease can be represented the whole trend of mortality rates among states.
+
+We draw the heart disease mortality by state:
+
+Data source:
+https://www.cdc.gov/nchs/pressroom/sosmap/heart_disease_mortality/heart_disease.htm
+
+```{r}
+library(maps)
+heart2019<-read.csv("/Users/zhouwenxiao/Desktop/USMortality/heart2019.csv")
+statesMap<-map_data("state")
+heart2019$STATE<-tolower(heart2019$STATE)
+heartMap<-inner_join(statesMap,heart2019,by=c("region"="STATE"))
+ggplot(heartMap, aes(x = long, y = lat, group = group, fill = RATE)) + geom_polygon(color = "black") + ggtitle("Heart Disease Mortality Rate by States in 2019")+
+  scale_fill_gradient(low = "white", high = "red", guide = "legend")
+```
+
+Make comparison of education levels by states:
+
+<Reference: 
+The impact of increasing education levels on rising life expectancy https://genus.springeropen.com/articles/10.1186/s41118-019-0055-0>
+
+Education rank Data Resource: https://wallethub.com/edu/e/most-educated-states/31075>
+
+Basing on the article,we detect whether there is relationship between states' education levels and mortality rates：
+```{r}
+educate2019<-read_excel("/Users/zhouwenxiao/Desktop/USMortality/educate2019.xlsx")
+statesMap<-map_data("state")
+educate2019$State<-tolower(educate2019$State)
+eduMap<-inner_join(statesMap,educate2019,by=c("region"="State"))
+names(eduMap)<-c("long","lat","group","order","region","subregion",
+                 "rank","score","educational","quality")
+ggplot(eduMap, aes(x = long, y = lat, group = group)) + 
+  geom_polygon(fill = "white", color = "black")
+ggplot(eduMap, aes(x = long, y = lat, group = group, fill = score)) + geom_polygon(color = "black")+ggtitle("Education Evaluation by States")+
+  scale_fill_gradient(low = "blue", high = "white", guide = "legend")
+```
+
+From the plot, state with high mortality rate in heart disease has low education score. Relationship between these two factors verify.
+
+
+
+
+
