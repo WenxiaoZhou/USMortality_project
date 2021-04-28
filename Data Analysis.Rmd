@@ -80,8 +80,6 @@ Here, we find the distribution of mortality counts within education levels are w
 
 Enrollment Data: https://data.census.gov/cedsci/table?q=school&tid=ACSST1Y2019.S1401
 
-<注意说明误差问题，人口普查的各个学龄段数据只包含美国公民，但死亡案例是否包含外来人口，有待核查，计算的比例>
-
 ```{r}
 library(viridis)
 library(hrbrthemes)
