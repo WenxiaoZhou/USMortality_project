@@ -1,4 +1,8 @@
 #Final Project--STAT 5525
+#Author: Wenxiao Zhou
+#This file is for data cleaning and management process, find the original dataset under the CDC webpage-- Mortality Multiple Cause Files
+#https://www.cdc.gov/nchs/data_access/vitalstatsonline.htm#Mortality_Multiple
+
 setwd("/Users/zhouwenxiao/Desktop/USMortality")
 library(sqldf)
 fixed1<-file("US19.DUSMCPUB_r20201216")
