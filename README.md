@@ -15,7 +15,7 @@ Please feel free to comment on my project. Thanks!
 <Appendix: This is my final academic project during my Master's Degree in Uconn. I appreciate all my hard work here and all the knowledge learning here. Thanks
 to professors and friends help me to progress more and share their experiences. I benefit a lot from their words.
 
-Finally, I quote from a favorite sentence by Hans Rosling: There’s no room for facts when our minds are occupied by fear.
+Finally, I quote from one of my favorite sentence by Hans Rosling: There’s no room for facts when our minds are occupied by fear.
 
 Hope to progress more!>
 
